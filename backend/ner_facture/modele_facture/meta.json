@@ -1,0 +1,43 @@
+{
+  "lang":"fr",
+  "name":"pipeline",
+  "version":"0.0.0",
+  "spacy_version":">=3.8.7,<3.9.0",
+  "description":"",
+  "author":"",
+  "email":"",
+  "url":"",
+  "license":"",
+  "spacy_git_version":"4b65aa7",
+  "vectors":{
+    "width":0,
+    "vectors":0,
+    "keys":0,
+    "name":null,
+    "mode":"default"
+  },
+  "labels":{
+    "ner":[
+      "DATE_ECHEANCE",
+      "DATE_EMISSION",
+      "DESCRIPTION_LIGNE",
+      "FOURNISSEUR",
+      "MONTANT_HT",
+      "MONTANT_LIGNE",
+      "MONTANT_TTC",
+      "NUM_FACTURE",
+      "PRIX_UNITAIRE_HT",
+      "QUANTITE",
+      "RIB_IBAN"
+    ]
+  },
+  "pipeline":[
+    "ner"
+  ],
+  "components":[
+    "ner"
+  ],
+  "disabled":[
+
+  ]
+}
