@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Relevé Société Générale</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .sg-logo {
+      color: red;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .box {
+      border: 1px solid #aaa;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #f9f9f9;
+    }
+    .box h4 {
+      margin: 0 0 5px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 6px;
+      text-align: center;
+    }
+    th {
+      background-color: #e0e0e0;
+    }
+    .footer {
+      border: 1px solid #000;
+      padding: 10px;
+      margin-top: 20px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="sg-logo">SOCIÉTÉ GÉNÉRALE</div>
+    <div>
+      <strong>RELEVÉ DE COMPTE</strong><br>
+      {{ periode }}
+    </div>
+  </div>
+
+  <div class="box">
+    <h4>Relevé d'Identité Bancaire <span style="float:right;">كشف التعريف البنكي</span></h4>
+    <p><strong>Nom / الاسم :</strong> {{ nom_client }}</p>
+    <p><strong>Agence / الوكالة :</strong> {{ agence }}</p>
+    <p><strong>RIB / رقم الحساب :</strong> {{ rib }}</p>
+    <p><strong>Devise / العملة :</strong> DIRHAMS / دراهم</p>
+  </div>
+
+  <div class="box">
+    <h4>Informations Client <span style="float:right;">معلومات الزبون</span></h4>
+    <p><strong>Adresse / العنوان :</strong> {{ adresse }}</p>
+  </div>
+
+  <div class="box">
+    <h4>Solde Précédent <span style="float:right;">الرصيد السابق</span></h4>
+    <p>{{ solde_precedent }} MAD</p>
+  </div>
+
+  <div class="box">
+    <h4>Mouvements / العمليات <span style="float:right;">تفاصيل العمليات</span></h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Date / التاريخ</th>
+          <th>Libellé / البيان</th>
+          <th>Débit / مدين</th>
+          <th>Crédit / دائن</th>
+          <th>Solde / الرصيد</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for op in operations %}
+        <tr>
+          <td>{{ op.date }}</td>
+          <td>{{ op.libelle }}</td>
+          <td>{% if op.debit %}{{ op.debit }}{% endif %}</td>
+          <td>{% if op.credit %}{{ op.credit }}{% endif %}</td>
+          <td>{{ op.solde }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <div>NOUVEAU SOLDE AU : {{ date_solde }}</div>
+    <div>{{ date_solde_ar }} الرصيد الجديد بتاريخ</div>
+  </div>
+
+  <p style="font-weight: bold; margin-top: 5px;">{{ solde_final }} MAD {{ statut_solde }}</p>
+
+</body>
+</html>

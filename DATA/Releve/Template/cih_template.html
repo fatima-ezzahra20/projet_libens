@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Relevé CIH Bank</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    .bank-header {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .client-info {
+      text-align: right;
+      font-size: 14px;
+      margin-top: -30px;
+    }
+    .title-center {
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 20px 0;
+    }
+    .identity-box {
+      border: 1px solid #000;
+      padding: 8px;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .identity-box table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .identity-box th, .identity-box td {
+      border: 1px solid #000;
+      padding: 6px;
+      text-align: center;
+    }
+    table.transactions {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    table.transactions th, table.transactions td {
+      border: 1px solid #000;
+      padding: 6px 8px;
+      text-align: center;
+    }
+    table.transactions th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bank-header">CIH BANK</div>
+
+  <div class="client-info">
+    <div>{{ nom_client }}</div>
+    <div>{{ adresse_ligne1 }}</div>
+    <div>{{ adresse_ligne2 }}</div>
+  </div>
+
+  <div class="title-center">RELEVÉ DE COMPTE BANCAIRE / كشف حساب بنكي</div>
+  <div class="title-center">RELEVÉ D’IDENTITÉ BANCAIRE / كشف التعريف البنكي</div>
+
+  <div class="identity-box">
+    <table>
+      <tr>
+        <th>Banque</th>
+        <th>Ville</th>
+        <th>N° de Compte</th>
+        <th>Clé RIB</th>
+      </tr>
+      <tr>
+        <td>{{ code_banque }}</td>
+        <td>{{ code_ville }}</td>
+        <td>{{ numero_compte }}</td>
+        <td>{{ cle_rib }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <table class="transactions">
+    <thead>
+      <tr>
+        <th>DATE<br>تاريخ</th>
+        <th>OPÉRATION-REFERENCE<br>مرجع</th>
+        <th>بيان<br>Description</th>
+        <th>DÉBIT<br>مدين</th>
+        <th>CRÉDIT<br>دائن</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for op in operations %}
+      <tr>
+        <td>{{ op.date }}</td>
+        <td>{{ op.reference }}</td>
+        <td>{{ op.libelle }}</td>
+        <td>{% if op.debit %}{{ op.debit }}{% endif %}</td>
+        <td>{% if op.credit %}{{ op.credit }}{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer">
+    NOUVEAU SOLDE AU {{ date_solde }} : {{ solde_final }} MAD {{ statut_solde }}
+  </div>
+
+</body>
+</html>
