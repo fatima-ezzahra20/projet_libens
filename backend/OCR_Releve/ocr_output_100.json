@@ -18,6 +18,7 @@
     ],
     "ocr_score": 1.0
   },
+  
   {
     "filename": "attijari_releve_99.pdf",
     "lines": [
@@ -112,6 +113,7 @@
     ],
     "ocr_score": 1.0
   },
+
   {
     "filename": "attijari_releve_88.pdf",
     "lines": [
@@ -131,6 +133,7 @@
     ],
     "ocr_score": 1.0
   },
+  
   {
     "filename": "attijari_releve_63.pdf",
     "lines": [
@@ -169,6 +172,7 @@
     ],
     "ocr_score": 1.0
   },
+
   {
     "filename": "attijari_releve_74.pdf",
     "lines": [
@@ -187,6 +191,8 @@
     ],
     "ocr_score": 1.0
   },
+
+ 
   {
     "filename": "attijari_releve_49.pdf",
     "lines": [
@@ -223,6 +229,7 @@
     ],
     "ocr_score": 1.0
   },
+  
   {
     "filename": "attijari_releve_13.pdf",
     "lines": [
@@ -260,6 +267,7 @@
     ],
     "ocr_score": 1.0
   },
+ 
   {
     "filename": "attijari_releve_05.pdf",
     "lines": [
@@ -317,6 +325,8 @@
     ],
     "ocr_score": 1.0
   },
+
+  
   {
     "filename": "attijari_releve_01.pdf",
     "lines": [
@@ -336,6 +346,7 @@
     ],
     "ocr_score": 1.0
   },
+
   {
     "filename": "attijari_releve_17.pdf",
     "lines": [
@@ -354,6 +365,7 @@
     ],
     "ocr_score": 1.0
   },
+  
   {
     "filename": "attijari_releve_18.pdf",
     "lines": [
@@ -372,6 +384,7 @@
     ],
     "ocr_score": 1.0
   },
+
   {
     "filename": "attijari_releve_09.pdf",
     "lines": [
@@ -390,6 +403,8 @@
     ],
     "ocr_score": 1.0
   },
+
+  
   {
     "filename": "attijari_releve_34.pdf",
     "lines": [
@@ -428,6 +443,7 @@
     ],
     "ocr_score": 1.0
   },
+  
   {
     "filename": "attijari_releve_36.pdf",
     "lines": [
@@ -466,6 +482,8 @@
     ],
     "ocr_score": 1.0
   },
+  
+
   {
     "filename": "attijari_releve_93.pdf",
     "lines": [
@@ -503,6 +521,8 @@
     ],
     "ocr_score": 1.0
   },
+
+
   {
     "filename": "attijari_releve_79.pdf",
     "lines": [
@@ -521,6 +541,7 @@
     ],
     "ocr_score": 1.0
   },
+
   {
     "filename": "attijari_releve_45.pdf",
     "lines": [
@@ -559,6 +580,10 @@
     ],
     "ocr_score": 1.0
   },
+
+
+
+
   {
     "filename": "attijari_releve_42.pdf",
     "lines": [
@@ -578,6 +603,8 @@
     ],
     "ocr_score": 1.0
   },
+  
+  
   {
     "filename": "attijari_releve_57.pdf",
     "lines": [
@@ -597,6 +624,7 @@
     ],
     "ocr_score": 1.0
   },
+  
   {
     "filename": "attijari_releve_94.pdf",
     "lines": [
@@ -634,6 +662,8 @@
     ],
     "ocr_score": 1.0
   },
+  
+ 
   {
     "filename": "attijari_releve_69.pdf",
     "lines": [
@@ -688,4 +718,8 @@
     ],
     "ocr_score": 1.0
   }
+
+
+ 
+ 
 ]
