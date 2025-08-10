@@ -8,12 +8,29 @@ import random
 import os
 
 # === Configuration ===
-OUTPUT_IMAGE = "outputs/releve_direct.png"
 HTML_TEMPLATE_FILE = "../../DATA/Releve/Template/attijari_template.html"
-  # fichier HTML dans ton dossier projet
-fake = Faker('fr_FR')
+OUTPUT_DIR = "outputs/batch"
+NUM_RELEVES = 70
+DPI_SIZE = (1240, 1754)
 
-# === Données factices ===
+fake = Faker('fr_FR')
+hti = Html2Image()
+hti.browser_path = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+hti.output_path = OUTPUT_DIR
+
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+LIBELLES_FR = [
+    "RETRAIT GAB HORS AGENCE",
+    "VIREMENT REÇU DE M. AHMED BENNANI",
+    "PAIEMENT CB AMAZON FR",
+    "PRÉLÈVEMENT ORANGE MAROC",
+    "REMISE CHÈQUE N° 589632",
+    "VERSEMENT DE SALAIRE MENSUEL",
+    "ACHAT SUPERMARCHÉ MARJANE",
+    "PAIEMENT FACTURE INTERNET IAM"
+]
+
 def generer_operations(n=6):
     ops = []
     for _ in range(n):
@@ -21,68 +38,59 @@ def generer_operations(n=6):
         montant = round(fake.pyfloat(left_digits=4, right_digits=2, positive=True), 2)
         ops.append({
             "date": fake.date_between(start_date='-6M', end_date='today').strftime("%d/%m/%Y"),
-            "libelle": fake.sentence(nb_words=4),
+            "libelle": random.choice(LIBELLES_FR),
             "debit": montant if sens == "debit" else None,
             "credit": montant if sens == "credit" else None,
         })
     return ops
 
-contexte = {
-    "nom_client": fake.name(),
-    "adresse_client_ligne1": fake.street_address(),
-    "adresse_client_ligne2": fake.city(),
-    "numero_compte": fake.iban(),
-    "rib": fake.iban(),
-    "operations": generer_operations(7),
-    "date_solde": fake.date_this_year().strftime("%d/%m/%Y"),
-    "solde_final": round(fake.pyfloat(left_digits=4, right_digits=2, positive=True), 2),
-    "statut_solde": fake.random_element(elements=("CRÉDITEUR", "DÉBITEUR"))
-}
+batch_results = []
 
-# === Lecture et rendu du template ===
+# === Lecture du template une seule fois ===
 with open(HTML_TEMPLATE_FILE, 'r', encoding='utf-8') as f:
     template = Template(f.read())
 
-html_rendered = template.render(**contexte)
+for i in range(1, NUM_RELEVES + 1):
+    contexte = {
+        "nom_client": fake.name(),
+        "adresse_client_ligne1": fake.street_address(),
+        "adresse_client_ligne2": fake.city(),
+        "numero_compte": fake.iban(),
+        "rib": fake.iban(),
+        "operations": generer_operations(7),
+        "date_solde": fake.date_this_year().strftime("%d/%m/%Y"),
+        "solde_final": round(fake.pyfloat(left_digits=4, right_digits=2, positive=True), 2),
+        "statut_solde": fake.random_element(elements=("CRÉDITEUR", "DÉBITEUR"))
+    }
 
-# === Générer PNG ===
-# === Générer PNG ===
-hti = Html2Image()
-hti.browser_path = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-hti.output_path = 'outputs'
-hti.screenshot(html_str=html_rendered, save_as="releve_direct.png", size=(1240, 1754))
+    html_rendered = template.render(**contexte)
+    image_filename = f"releve_{i}.png"
+    hti.screenshot(html_str=html_rendered, save_as=image_filename, size=DPI_SIZE)
 
+    image_path = os.path.join(OUTPUT_DIR, image_filename)
+    image = Image.open(image_path)
 
-# === OCR ligne par ligne ===
-image = Image.open(OUTPUT_IMAGE)
-ocr_text = pytesseract.image_to_string(image)
-ocr_lines = [line.strip() for line in ocr_text.splitlines() if line.strip()]
+    ocr_text = pytesseract.image_to_string(image)
+    ocr_lines = [line.strip() for line in ocr_text.splitlines() if line.strip()]
 
-# === OCR par mot pour calcul du score
-ocr_data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
-confidences = [
-    int(ocr_data['conf'][i])
-    for i in range(len(ocr_data['text']))
-    if ocr_data['conf'][i] != '-1'
-]
-ocr_score = round(sum(confidences) / len(confidences), 2) if confidences else 0
+    ocr_data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
+    confidences = [
+        int(ocr_data['conf'][j])
+        for j in range(len(ocr_data['text']))
+        if ocr_data['conf'][j] != '-1'
+    ]
+    ocr_score = round(sum(confidences) / len(confidences), 2) if confidences else 0
 
-# === Affichage console ===
-print("========== TEXTE OCRISÉ ==========\n")
-for line in ocr_lines:
-    print(line)
-print("\n========== SCORE MOYEN OCR ==========")
-print(f"{ocr_score:.2f} / 100")
+    batch_results.append({
+        "filename": image_filename,
+        "lines": ocr_lines,
+        "ocr_score": ocr_score
+    })
 
-# === Résultat JSON final ===
-ocr_result_json = {
-    "filename": os.path.basename(OUTPUT_IMAGE),
-    "lines": ocr_lines,
-    "ocr_score": ocr_score
-}
+    print(f"[{i}/{NUM_RELEVES}] ✔ OCR {image_filename} → Score : {ocr_score:.2f}")
 
-# === Sauvegarde JSON ===
-with open("outputs/ocr_direct_result.json", "w", encoding="utf-8") as f:
-    json.dump(ocr_result_json, f, ensure_ascii=False, indent=2)
+# === Sauvegarde finale JSON
+with open(os.path.join(OUTPUT_DIR, "ocr_batch_results.json"), "w", encoding="utf-8") as f:
+    json.dump(batch_results, f, ensure_ascii=False, indent=2)
 
-print("\n✅ Résultat sauvegardé dans outputs/ocr_direct_result.json")
+print("\n✅ Tous les résultats ont été sauvegardés dans ocr_batch_results.json")

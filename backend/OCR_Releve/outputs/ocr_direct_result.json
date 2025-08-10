@@ -2,20 +2,20 @@
   "filename": "releve_direct.png",
   "lines": [
     "ATTIJARIWAFA BANK",
-    "Claudine Masse",
-    "chemin Salmon",
-    "Marchandville",
-    "COMPTE : FR5855231748503488690330098",
-    "RIB : FR2765315404216407588180207",
+    "Lucas Moulin",
+    "76, chemin Dupuis",
+    "Saint Renée",
+    "COMPTE : FR3018582600277857377879946",
+    "RIB : FR1947059406851336527259403,",
     "DATE OPERATION / LIBELLE DEBIT CREDIT",
-    "25/03/2025 Machine forcer oser penser. 8684.84",
-    "01/05/2025 Grace bataille. 312.8",
-    "14/04/2025 Journée enfin choix. 3047.67",
-    "29/05/2025 Ton beauté mesure calme réflexion. 1324.67",
-    "06/03/2025 Consulter tard. 4404.5",
-    "23/04/2025 Erreur figure. 8228.48",
-    "13/03/2025 Mari falloir reposer servir. 447.22",
-    "NOUVEAU SOLDE AU 13/07/2025 : 8945.32 MAD CREDITEUR"
+    "03/07/2025 PRELEVEMENT ORANGE MAROC 676.91",
+    "20/07/2025 PAIEMENT CB AMAZON FR 5672.55",
+    "15/03/2025 ACHAT SUPERMARCHE MARJANE 5741.28",
+    "17103/2025 VERSEMENT DE SALAIRE MENSUEL 5102.5",
+    "24/05/2025 VERSEMENT DE SALAIRE MENSUEL 8433.27",
+    "24/06/2025 PAIEMENT CB AMAZON FR 4965.42",
+    "13/04/2025 VIREMENT REGU DE M. AHMED BENNANI 5574.96",
+    "NOUVEAU SOLDE AU 04/05/2025 : 1902.94 MAD DEBITEUR"
   ],
-  "ocr_score": 45.11
+  "ocr_score": 44.91
 }
