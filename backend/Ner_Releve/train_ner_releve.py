@@ -23,6 +23,37 @@ for entry in raw_data:
 
 print(f"📄 {len(TRAIN_DATA)} exemples chargés depuis {DATA_PATH}")
 
+
+def check_overlapping_entities(data):
+    problems = []
+    for i, (text, ann) in enumerate(data):
+        entities = ann.get("entities", [])
+        entities = sorted(entities, key=lambda x: x[0])
+        for j in range(len(entities) - 1):
+            start1, end1, label1 = entities[j]
+            start2, end2, label2 = entities[j+1]
+            if end1 > start2:
+                problems.append({
+                    "index": i,
+                    "text": text,
+                    "entity1": (start1, end1, label1, text[start1:end1]),
+                    "entity2": (start2, end2, label2, text[start2:end2])
+                })
+    return problems
+
+# Après chargement et préparation des données :
+problems = check_overlapping_entities(TRAIN_DATA)
+if problems:
+    print(f"⚠️ {len(problems)} chevauchements détectés :")
+    for p in problems:
+        print(f"Exemple #{p['index']}:")
+        print(f"  Entité 1: {p['entity1']}")
+        print(f"  Entité 2: {p['entity2']}")
+        print(f"  Texte : {p['text']}\n")
+else:
+    print("✅ Aucune entité chevauchante détectée.")
+
+
 # === 2. Création ou rechargement du modèle spaCy ===
 output_dir = Path("Model/")
 if output_dir.exists():

@@ -20,7 +20,8 @@
     "ner":[
       "DATE",
       "LIBELLE",
-      "MONTANT"
+      "MONTANT",
+      "SOLDE"
     ]
   },
   "pipeline":[

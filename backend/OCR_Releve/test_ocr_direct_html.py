@@ -9,8 +9,8 @@ import os
 
 # === Configuration ===
 HTML_TEMPLATE_FILE = "../../DATA/Releve/Template/attijari_template.html"
-OUTPUT_DIR = "outputs/batch"
-NUM_RELEVES = 70
+OUTPUT_DIR = "outputs/test_validation"
+NUM_RELEVES = 40
 DPI_SIZE = (1240, 1754)
 
 fake = Faker('fr_FR')
