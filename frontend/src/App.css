@@ -1,0 +1,16 @@
+.navbar-custom {
+  background-color: #343a40; /* fond sombre */
+}
+
+.navbar-custom .nav-link {
+  color: #fff;
+  font-weight: 500;
+}
+
+.navbar-custom .nav-link:hover {
+  color: #f8f9fa;
+}
+
+.btn-link {
+  text-decoration: none;
+}

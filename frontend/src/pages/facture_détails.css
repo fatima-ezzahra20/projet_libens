@@ -1,0 +1,52 @@
+.facture-container {
+  padding: 20px;
+  max-width: 80%;
+  margin-left: 270px;
+}
+
+.facture-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.back-arrow {
+  cursor: pointer;
+  color: #4e54c8;
+  transition: color 0.2s;
+}
+
+.back-arrow:hover {
+  color: #6c70e0;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.facture-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 20px;
+  margin-top: 10px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f5f5f5;
+}

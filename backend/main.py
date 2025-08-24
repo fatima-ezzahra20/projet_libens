@@ -1,18 +1,21 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from ocr.ocr_utilie import ocr_image, ocr_pdf
-import spacy
+from facture import router as factures_router
+from database import supabase  
+import logging
 import os
 import tempfile
-import logging
+import spacy
+from ocr_facture.ocr_utilie import ocr_image, ocr_pdf
 
 app = FastAPI()
+app.include_router(factures_router)
 
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # restreindre en prod
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,66 +24,133 @@ app.add_middleware(
 logging.basicConfig(level=logging.INFO)
 
 def detecter_type_document(texte: str) -> str:
-    """Détection du type de document (facture ou relevé) à partir du texte OCRisé."""
+    """Détecte si le document est une facture ou un relevé."""
     texte = texte.lower()
     facture_keywords = ["facture", "n° facture", "tva", "client", "montant", "date d'échéance"]
     releve_keywords = ["relevé", "solde", "opération", "crédit", "débit", "date opération"]
-
     score_facture = sum(kw in texte for kw in facture_keywords)
     score_releve = sum(kw in texte for kw in releve_keywords)
+    return "facture" if score_facture >= score_releve else "releve"
 
-    logging.info(f"Score facture : {score_facture} | Score relevé : {score_releve}")
 
-    if score_facture >= score_releve:
-        return "facture"
-    else:
-        return "releve"
+def insert_invoice(entites, user_id: int):
+    """Insère la facture et ses lignes dans Supabase."""
+    facture_data = {
+        "num_facture": entites["num_facture"],
+        "fournisseur": entites["fournisseur"],
+        "montant_total_ht": entites["montant_total_ht"],
+        "montant_total_ttc": entites["montant_total_ttc"],
+        "date_emission": entites["date_emission"],
+        "date_echeance": entites["date_echeance"],
+        "rib_iban": entites.get("rib_iban"),
+        "user_id": user_id,
+    }
 
-@app.post("/extract")
-async def extract(file: UploadFile = File(...)):
-    ext = os.path.splitext(file.filename)[1].lower()
-    logging.info(f"Fichier reçu : {file.filename} | Extension : {ext}")
+    # ✅ Insertion dans la table factures
+    facture_response = supabase.table("factures").insert(facture_data).execute()
+    if not facture_response.data:
+        raise Exception(f"Erreur insertion facture : {facture_response}")
 
+    facture_id = facture_response.data[0]["id"]
+
+    # ✅ Insertion des lignes si elles existent
+    for ligne in entites.get("lignes", []):
+       ligne_data = {
+        "facture_id": facture_id,
+        "description_ligne": ligne.get("description_ligne", ""),
+        "quantite": int(ligne.get("quantite", 1)),
+        "prix_unitaire_ht": float(ligne.get("prix_unitaire_ht", 0)),
+        "montant_ligne": float(ligne.get("montant_ligne", 0)),
+      }
+       supabase.table("lignes_facture").insert(ligne_data).execute()
+
+
+    return {**facture_data, "id": facture_id, "lignes": entites.get("lignes", [])}
+
+
+@app.get("/")
+def root():
+    return {"message": "Backend API is running!"}
+
+
+@app.post("/factures/upload")
+async def upload_facture(facture: UploadFile = File(...), user_id: int = 1):
+    ext = os.path.splitext(facture.filename)[1].lower()
+
+    # 1️⃣ Sauvegarde temporaire
     with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
-        tmp.write(await file.read())
+        tmp.write(await facture.read())
         tmp_path = tmp.name
-    logging.info(f"Fichier temporaire créé : {tmp_path}")
 
     try:
-        # === OCR ===
+        # 2️⃣ OCR
         if ext in [".png", ".jpg", ".jpeg"]:
             texte = ocr_image(tmp_path)
         elif ext == ".pdf":
             texte = "\n\n".join(ocr_pdf(tmp_path))
         else:
-            return JSONResponse(content={"error": "Format non supporté"}, status_code=400)
+            return JSONResponse({"error": "Format non supporté"}, status_code=400)
 
-        logging.info("OCR terminé.")
-        
-        # === Détection du type ===
+        # 3️⃣ Vérifier que c'est une facture
         type_doc = detecter_type_document(texte)
-        logging.info(f"Type de document détecté : {type_doc}")
+        if type_doc != "facture":
+            return JSONResponse({"error": "Document n'est pas une facture"}, status_code=400)
 
-        # === Chargement du bon modèle ===
-        if type_doc == "facture":
-            nlp = spacy.load("ner_facture/modele_facture")
-        else:
-            nlp = spacy.load("ner_releve/modele_releve")  # ← adapte ce chemin
-
-        # === Extraction des entités ===
+        # 4️⃣ Extraction avec SpaCy
+        nlp = spacy.load("ner_facture/modele_facture")
         doc = nlp(texte)
-        entites = [{"label": ent.label_, "text": ent.text} for ent in doc.ents]
-        logging.info(f"Extraction terminée. {len(entites)} entités détectées.")
+        entites = {
+            "num_facture": next((ent.text for ent in doc.ents if ent.label_ == "NUM_FACTURE"), ""),
+            "fournisseur": next((ent.text for ent in doc.ents if ent.label_ == "FOURNISSEUR"), ""),
+            "montant_total_ht": float(next((ent.text.replace(",", ".") for ent in doc.ents if ent.label_ == "MONTANT_HT"), 0)),
+            "montant_total_ttc": float(next((ent.text.replace(",", ".") for ent in doc.ents if ent.label_ == "MONTANT_TTC"), 0)),
+            "date_emission": next((ent.text for ent in doc.ents if ent.label_ == "DATE_EMISSION"), ""),
+            "date_echeance": next((ent.text for ent in doc.ents if ent.label_ == "DATE_ECHEANCE"), ""),
+            "rib_iban": next((ent.text for ent in doc.ents if ent.label_ == "RIB_IBAN"), None),
+            "lignes": []  
+        }
+        
+        # CORRECTION : Meilleur regroupement des lignes
+        lignes = []
+        ligne_courante = {}
 
-    except Exception as e:
-        logging.error(f"Erreur lors du traitement : {e}")
-        return JSONResponse(content={"error": "Erreur interne serveur"}, status_code=500)
+        for ent in doc.ents:
+            if ent.label_ == "DESCRIPTION_LIGNE":
+                # Nouvelle ligne détectée
+                if ligne_courante:  # Sauvegarder la ligne précédente
+                    lignes.append(ligne_courante)
+                ligne_courante = {
+                    "description_ligne": ent.text,
+                    "quantite": 1,
+                    "prix_unitaire_ht": 0.0,
+                    "montant_ligne": 0.0
+                }
+            elif ent.label_ == "QUANTITE" and ligne_courante:
+                try:
+                    ligne_courante["quantite"] = int(ent.text)
+                except ValueError:
+                    ligne_courante["quantite"] = 1
+            elif ent.label_ == "PRIX_UNITAIRE_HT" and ligne_courante:
+                try:
+                    ligne_courante["prix_unitaire_ht"] = float(ent.text.replace(",", "."))
+                except ValueError:
+                    ligne_courante["prix_unitaire_ht"] = 0.0
+            elif ent.label_ == "MONTANT_LIGNE" and ligne_courante:
+                try:
+                    ligne_courante["montant_ligne"] = float(ent.text.replace(",", "."))
+                except ValueError:
+                    ligne_courante["montant_ligne"] = 0.0
+
+        # Ajouter la dernière ligne
+        if ligne_courante:
+            lignes.append(ligne_courante)
+
+        entites["lignes"] = lignes
+
+        # 5️⃣ Insertion Supabase
+        facture_record = insert_invoice(entites, user_id)
+
     finally:
         os.remove(tmp_path)
-        logging.info(f"Fichier temporaire supprimé : {tmp_path}")
 
-    return {
-        "texte": texte,
-        "type_document": type_doc,
-        "entites": entites
-    }
+    return JSONResponse(content=facture_record)

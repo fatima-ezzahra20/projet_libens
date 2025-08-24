@@ -15,7 +15,7 @@ import os
 # ------------------------------------------------------------------
 # 1) Charger le jeu d'entraînement (train_data.json dans le même dossier)
 # ------------------------------------------------------------------
-DATA_PATH = pathlib.Path(__file__).parent / "annotations_auto.json"
+DATA_PATH = pathlib.Path(__file__).parent / "train_data.json"
 
 with DATA_PATH.open(encoding="utf-8") as f:
     TRAIN_DATA = json.load(f)
