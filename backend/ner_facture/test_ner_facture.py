@@ -9,7 +9,7 @@ import spacy
 from pathlib import Path
 
 # === CONFIGURATION ===
-DOSSIER_ENTREE = "../../DATA/Factures_test"   # Dossier contenant les images et PDF
+DOSSIER_ENTREE = "../../DATA/Facture/factures_test2"   # Dossier contenant les images et PDF
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 POPPLER_PATH = r"C:\Users\user\Downloads\Release-24.08.0-0\poppler-24.08.0\Library\bin"
 MODEL_DIR = Path(__file__).parent / "modele_facture"

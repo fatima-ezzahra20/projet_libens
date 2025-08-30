@@ -12,7 +12,7 @@ from PIL import Image, ImageFilter, ImageOps
 
 fake = Faker("fr_FR")  # Faker en français
 
-OUTPUT_DIR = "DATA/factures"
+OUTPUT_DIR = "factures_train"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 POPPLER_PATH = r"C:\Users\user\Downloads\Release-24.08.0-0\poppler-24.08.0\Library\bin"
@@ -70,6 +70,40 @@ produits_par_fournisseur = {
         "Forfait mobile",
         "Accessoires téléphonie"
     ],
+    "Marjane" : [
+        "Produits alimentaires",
+        "Électroménager",
+        "Vêtements",
+        "Meubles et décoration"
+    ],
+
+    "Inwi" : [
+        "Forfait mobile",
+        "Carte prépayée",
+        "Box internet 4G",
+        "Smartphone Oppo Reno"
+    ],
+
+    "IAM (Maroc Telecom)" : [
+        "Abonnement internet ADSL",
+        "Forfait mobile illimité",
+        "Carte Jawal",
+        "Clé internet 4G"
+    ],
+
+    "Carrefour Maroc": [
+        "Produits alimentaires",
+        "Hygiène et beauté",
+        "Jouets et loisirs",
+        "Électroménager"
+    ],
+
+    "Electroplanet ": [
+        "Télévisions",
+        "Réfrigérateurs",
+        "Smartphones",
+        "Laptops et tablettes"
+    ]
 }
 
 clients_marocains = [
@@ -83,20 +117,71 @@ clients_marocains = [
     "Nadia Choukri",
     "Karim Elmoutawakil",
     "Salma Bouziane",
+     "Omar El Idrissi",
+    "Imane Soulaimani",
+    "Hicham Marouane",
+    "Latifa Oubihi",
+    "Samir Kabbaj",
+    "Meryem Kharbouch",
+    "Anas Outmane",
+    "Soukaina Rami",
+    "Hamza El Ghazali",
+    "Asmae Bouchtat",
+    "Tarik Lamsaouri",
+    "Houda Chraibi",
+    "Reda Boutayeb",
+    "Amina Serghini",
+    "Ismail Berrada",
+    "Naima El Mansouri",
+    "Adil Fassi Fihri",
+    "Zineb Chaouki",
+    "Mustapha Ait Taleb",
+    "Ilham Dlimi",
 ]
 
 villes_quartiers = [
     "Casablanca - Maarif",
+    "Casablanca - Ain Diab",
+    "Casablanca - Sidi Bernoussi",
+    "Casablanca - Derb Sultan",
+    "Casablanca - Anfa",
     "Rabat - Agdal",
+    "Rabat - Hassan",
+    "Rabat - Yacoub El Mansour",
+    "Rabat - Souissi",
     "Marrakech - Gueliz",
+    "Marrakech - Medina",
+    "Marrakech - Sidi Youssef Ben Ali",
+    "Marrakech - Targa",
     "Fès - Medina",
+    "Fès - Ville Nouvelle",
+    "Fès - Narjiss",
+    "Fès - Zouagha",
     "Tanger - Malabata",
+    "Tanger - Marshan",
+    "Tanger - Beni Makada",
+    "Tanger - Centre Ville",
     "Agadir - Talborjt",
+    "Agadir - Dakhla",
+    "Agadir - Hay Salam",
+    "Agadir - Founty",
     "Meknès - Ville Nouvelle",
+    "Meknès - Hamria",
+    "Meknès - Medina",
+    "Meknès - Toulal",
     "Oujda - Hay Mohammadi",
+    "Oujda - Lazaret",
+    "Oujda - Sidi Yahya",
+    "Oujda - Centre Ville",
     "El Jadida - Centre Ville",
-    "Nador - Boukhalef",
+    "El Jadida - Sidi Bouzid",
+    "El Jadida - Haouzia",
+    "Nador - Centre Ville",
+    "Nador - Selouane",
+    "Nador - Beni Ensar",
+    "Nador - Hay Al Matar",
 ]
+
 
 def gen_invoice_data():
     fournisseur = random.choice(list(produits_par_fournisseur.keys()))
@@ -129,6 +214,7 @@ def gen_invoice_data():
     client = random.choice(clients_marocains)
     adresse_four = random.choice(villes_quartiers)
     adresse_client = random.choice(villes_quartiers)
+    tva = 0.2  # 20%
 
     return {
         "num": f"FAC-{fake.unique.random_int(1000, 9999)}",
@@ -143,8 +229,8 @@ def gen_invoice_data():
         "date_ech": fake.date_between("today", "+30d"),
         "items": items,
         "total_ht": round(total_ht, 2),
-        "tva": 0.0,
-        "total_ttc": round(total_ht, 2)
+        "tva": 0.2,
+        "total_ttc": round(total_ht * (1 + tva), 2)
     }
 
 
@@ -216,14 +302,14 @@ def pdf_to_scanned_image(pdf_path, img_path):
     final.save(img_path, "PNG", quality=90)
 
 # Exécution pour générer les factures (PDF et PNG)
-print("📄 Génération de 50 factures PDF marocaines avec produits cohérents...")
-for _ in tqdm(range(50)):
+print("📄 Génération de 250 factures PDF marocaines avec produits cohérents...")
+for _ in tqdm(range(250)):
     data = gen_invoice_data()
     pdf_path = os.path.join(OUTPUT_DIR, f"{data['num']}.pdf")
     draw_pdf(data, pdf_path)
 
-print("🖼️ Génération de 50 factures images (PNG)...")
-for _ in tqdm(range(50)):
+print("🖼️ Génération de 250 factures images (PNG)...")
+for _ in tqdm(range(250)):
     data = gen_invoice_data()
     temp_pdf = os.path.join(OUTPUT_DIR, f"{data['num']}_temp.pdf")
     img_path = os.path.join(OUTPUT_DIR, f"{data['num']}.png")
@@ -231,7 +317,7 @@ for _ in tqdm(range(50)):
     pdf_to_scanned_image(temp_pdf, img_path)
     os.remove(temp_pdf)
 
-print(f"\n✅ Terminé : 100 factures (50 PDF + 50 images) créées dans {OUTPUT_DIR}/")
+print(f"\n✅ Terminé : 500 factures (250 PDF + 250 images) créées dans {OUTPUT_DIR}/")
 
 
 

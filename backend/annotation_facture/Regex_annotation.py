@@ -71,7 +71,7 @@ def remove_overlapping_entities(entities):
             print(f"⚠️  Conflit détecté entre {label} et une entité précédente.")
     return non_overlapping
 # Charger le fichier JSON OCR
-with open("../ocr_facture/ocr_output.json", "r", encoding="utf-8") as f:
+with open("../ocr_facture/ocr_output_test.json", "r", encoding="utf-8") as f:
     factures = json.load(f)
 # Construire le fichier d'annotations (format [texte, {"entities": [...]}])
 annotations = []
@@ -88,7 +88,7 @@ for facture in tqdm(factures, desc="📝 Génération annotations"):
     ])
 
 # Sauvegarder au format demandé
-with open("../ner_facture/train_data.json", "w", encoding="utf-8") as f:
+with open("../ner_facture/test_data.json", "w", encoding="utf-8") as f:
     json.dump(annotations, f, ensure_ascii=False, indent=2)
 
 print("✅ Annotations automatiques générées pour toutes les factures !")

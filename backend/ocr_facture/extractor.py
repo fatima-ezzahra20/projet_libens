@@ -7,8 +7,8 @@ from pdf2image import convert_from_path
 import numpy as np
 
 # === CONFIGURATION ===
-DOSSIER_ENTREE = "../DATA/factures_train"
-OUTPUT_FILE = "ocr_output.json" 
+DOSSIER_ENTREE = "../../DATA/Facture/factures_test2"
+OUTPUT_FILE = "ocr_output_test.json" 
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 POPPLER_PATH = r"C:\Users\user\Downloads\Release-24.08.0-0\poppler-24.08.0\Library\bin"
 
