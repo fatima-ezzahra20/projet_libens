@@ -1,0 +1,31 @@
+.releve-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.releve-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.releve-card-title {
+  margin-top: 0;
+  color: #4b6cb7;
+}
+
+.releve-card-info {
+  margin: 15px 0;
+}
+
+.releve-card-info p {
+  margin: 5px 0;
+}
+
+.releve-card-details {
+  text-align: right;
+  font-weight: bold;
+  color: #4b6cb7;
+}
