@@ -2,6 +2,8 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './App.css';
+import RelevesList from '../../frontend/src/pages/RelevesList';
+import ReleveDetails from '../../frontend/src/pages/ReleveDetails';
 
 import Sidebar from './components/sidebar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -18,7 +20,9 @@ function App() {
         <div className="content p-4 flex-1">
           <Routes>
             <Route path="/factures" element={<Factures />} />
-              <Route path="/facture/:id" element={<FactureDetail />} />
+            <Route path="/facture/:id" element={<FactureDetail />} />
+            <Route path="/releves" element={<RelevesList />} />
+            <Route path="/releves/:id" element={<ReleveDetails />} />
           </Routes>
         </div>
       </div>

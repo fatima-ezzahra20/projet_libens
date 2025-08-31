@@ -1,0 +1,43 @@
+.releve-details-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #4b6cb7;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.details-card, .transactions-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.details-card p {
+  margin: 10px 0;
+}
+
+.transactions-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transactions-card th, .transactions-card td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.transactions-card th {
+  background-color: #f4f7f9;
+}

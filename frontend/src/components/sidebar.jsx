@@ -13,8 +13,11 @@ function Sidebar() {
             <FaFileInvoice className="sidebar-icon" /> Factures
           </Link>
         </li>
-        <li>
-           <FaFileInvoice className="sidebar-icon" /> Relevés
+        
+        <li className="sidebar-item">
+          <Link to="/releves" className="sidebar-link">
+            <span className="icon">📊 </span> Mes Relevés
+          </Link>
         </li>
       </ul>
     </div>
