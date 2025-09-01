@@ -2,6 +2,7 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from .facture import router as factures_router
+from  .dashboard import router as dashboard_router
  
 import logging
 import os
@@ -25,6 +26,7 @@ import uuid
 from fastapi.middleware.cors import CORSMiddleware
 
 
+
 # Définir le langage pour la conversion des mois
 try:
     locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
@@ -45,6 +47,8 @@ origins = [
 
 
 app.include_router(factures_router)
+app.include_router(dashboard_router, prefix="/dashboard")
+
 
 # CORS
 app.add_middleware(
@@ -338,3 +342,4 @@ async def get_releve_details(releve_id: str):
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+

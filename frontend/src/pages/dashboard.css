@@ -1,0 +1,74 @@
+.dashboard-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  margin-left: 270px;
+}
+
+.dashboard-container h1 {
+  text-align: center;
+}
+
+.stats-cards {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+
+
+.card-factures {
+  background-color: #4caf50;
+  flex: 1;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.card-releves {
+  background-color: #2196f3;
+  flex: 1;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.card h2 {
+  margin: 0;
+}
+
+.card p {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 10px 0 0 0;
+}
+
+.chart-section {
+  margin-top: 50px;
+}
+
+.chart-section h2 {
+  text-align: center;
+}
+.proches-echeances-section {
+  margin-top: 40px;
+}
+
+.proches-echeances-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.proches-echeances-section th,
+.proches-echeances-section td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.proches-echeances-section th {
+  background-color: #f2f2f2;
+}

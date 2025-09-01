@@ -9,6 +9,11 @@ function Sidebar() {
       <h2 className="sidebar-title">Libens consulting</h2>
       <ul className="sidebar-list">
         <li className="sidebar-item">
+          <Link to="/" className="sidebar-link">
+            <span className="icon">📊 </span> Dashboard
+          </Link>
+        </li>
+        <li className="sidebar-item">
           <Link to="/factures" className="sidebar-link">
             <FaFileInvoice className="sidebar-icon" /> Factures
           </Link>
@@ -16,7 +21,7 @@ function Sidebar() {
         
         <li className="sidebar-item">
           <Link to="/releves" className="sidebar-link">
-            <span className="icon">📊 </span> Mes Relevés
+            <FaFileInvoice className="sidebar-icon" /> Mes Relevés
           </Link>
         </li>
       </ul>

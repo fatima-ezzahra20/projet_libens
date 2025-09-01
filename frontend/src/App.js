@@ -7,6 +7,7 @@ import ReleveDetails from '../../frontend/src/pages/ReleveDetails';
 
 import Sidebar from './components/sidebar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Dashboard from "./pages/dashboard";
 
 
 import Factures from './pages/mesfactures';
@@ -23,6 +24,7 @@ function App() {
             <Route path="/facture/:id" element={<FactureDetail />} />
             <Route path="/releves" element={<RelevesList />} />
             <Route path="/releves/:id" element={<ReleveDetails />} />
+            <Route path="/" element={<Dashboard />} />
           </Routes>
         </div>
       </div>
