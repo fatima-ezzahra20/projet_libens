@@ -28,11 +28,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; 
 }
 
 /* Champ de recherche */
 .search-input {
+   flex: 1;   
   padding: 12px 20px;
   font-size: 16px;
   border: 1px solid #ddd;
@@ -40,7 +41,8 @@
   outline: none;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
-  min-width: 200px;
+  min-width: 400px;
+  
 }
 
 .search-input:focus {

@@ -105,7 +105,65 @@ def insert_invoice(entites, user_id: int):
 
     return {**facture_data, "id": facture_id, "lignes": entites.get("lignes", [])}
 
+## Routes de recherche
+# ---
 
+@app.get("/releves/search")
+def search_releves(q: str):
+    """
+    Recherche des relevés par mot-clé, date ou montant.
+    """
+    if not q:
+        return {"releves": []}
+
+    try:
+        normalized_q = q.replace(',', '.')
+        releves_ids = set()
+
+        is_numeric = False
+        try:
+            q_float = float(normalized_q)
+            is_numeric = True
+        except ValueError:
+            pass
+        
+        # Recherche 1: Trouver les IDs des relevés qui correspondent au solde
+        if is_numeric:
+            solde_query = supabase.table("releves").select("id").eq("solde", q_float).execute()
+            for r in solde_query.data:
+                releves_ids.add(r['id'])
+        
+        # Recherche 2: Trouver les IDs des relevés qui contiennent des transactions correspondantes
+        if is_numeric:
+            transactions_query = supabase.table("transaction").select("releve_id").or_(
+                f'libelle.ilike.%{q}%, montant.eq.{q_float}'
+            ).execute()
+        else:
+            transactions_query = supabase.table("transaction").select("releve_id").ilike("libelle", f'%{q}%').execute()
+
+        for t in transactions_query.data:
+            releves_ids.add(t['releve_id'])
+
+        # Recherche 3: Trouver les IDs des relevés qui correspondent directement
+        releves_direct_query = supabase.table("releves").select("id").or_(
+            f'releve_mois.ilike.%{q}%,filename.ilike.%{q}%'
+        ).execute()
+
+        for r in releves_direct_query.data:
+            releves_ids.add(r['id'])
+
+        # Récupérer les relevés complets pour les IDs uniques trouvés
+        unique_releves = []
+        if releves_ids:
+            releves_response = supabase.table("releves").select("*").in_("id", list(releves_ids)).execute()
+            unique_releves = releves_response.data
+        
+        return {"releves": unique_releves}
+
+    except Exception as e:
+        print(f"Erreur Supabase lors de la recherche : {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur lors de la recherche.")
+        
 @app.get("/")
 def root():
     return {"message": "Backend API is running!"}

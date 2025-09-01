@@ -1,0 +1,53 @@
+/* src/components/SearchBar.css */
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px; /* Plus d'espace sous la barre */
+}
+
+/* Style pour le champ de saisie */
+.search-input {
+  padding: 12px 20px; /* Augmenter le padding pour un look plus grand */
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 25px; /* Coins très arrondis pour un style moderne */
+  width: 100%;
+  max-width: 500px;
+  outline: none; /* Retirer le contour bleu par défaut */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+  transition: all 0.3s ease; /* Transition douce pour les effets */
+}
+
+/* Style du champ quand il est sélectionné */
+.search-input:focus {
+  border-color: #6A5ACD; /* Bordure bleue */
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3); /* Ombre plus visible */
+}
+
+/* Style pour le bouton */
+.search-button {
+  padding: 12px 25px;
+  margin-left: -20px;
+  font-size: 16px;
+  background-color:  #6A5ACD; /* Un violet/mauve */
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+/* Effet au survol du bouton */
+.search-button:hover {
+  background-color: #6A5ACD; /* Une teinte plus foncée */
+  transform: translateY(-2px);
+}
+
+/* Effet au clic du bouton */
+.search-button:active {
+  transform: translateY(0); /* Retour à la position normale */
+}
